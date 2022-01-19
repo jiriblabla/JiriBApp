@@ -98,8 +98,8 @@ class MainActivity : AppCompatActivity() {
 
             return when (timeOfDay) {
                 in 0..11 -> "Dobré ráno, $NAME"
-                in 12..18 -> "Dobré odpoledne, $NAME"
-                in 18..23 -> "Dobrý večer, $NAME"
+                in 12..17 -> "Dobré odpoledne, $NAME"
+                in 18..24 -> "Dobrý večer, $NAME"
                 else -> "Dobrý den, $NAME"
             }
         }
@@ -127,6 +127,7 @@ class MainActivity : AppCompatActivity() {
 
                 val updatedAt:Long = jsonObj.getLong("dt")
                 val updatedAtText = SimpleDateFormat("dd. MM. yyyy").format(Date(updatedAt*1000))
+
 
                 val temp = (main.getString("temp"))+"°C"
                 val tempStr = (main.getString("temp"))
