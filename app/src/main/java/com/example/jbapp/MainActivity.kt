@@ -26,25 +26,21 @@ import android.icu.util.Calendar
 
 
 class MainActivity : AppCompatActivity() {
-
-    val CITY: String = "frenštát pod radhoštěm,cz"
     val API: String = "06c921750b9a82d8f5d1294e1586276f" // Use API key
     val NAME: String = "Jiří"
     lateinit var spinner:Spinner
     lateinit var adapter: ArrayAdapter<String>
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var data = arrayListOf<String>("Praha","Brno","Ostrava","Olomouc","Opava")
+        var data = arrayListOf<String>("Praha","Brno","Ostrava","Olomouc","Opava","Frenštát p.R.")
         adapter = ArrayAdapter(applicationContext,android.R.layout.simple_spinner_dropdown_item,data)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
         spinner = findViewById(R.id.spinner) as Spinner
         spinner.adapter=adapter
 
-        weatherTask().execute()
 
         spinner.onItemSelectedListener = object:AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -54,11 +50,12 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ) {
                 when(position){
-                    0 -> findViewById<TextView>(R.id.svatek).text = "nula"
-                    1 -> findViewById<TextView>(R.id.svatek).text = "jedna"
-                    2 -> findViewById<TextView>(R.id.svatek).text = "dva"
-                    3 -> findViewById<TextView>(R.id.svatek).text = "tri"
-                    3 -> findViewById<TextView>(R.id.svatek).text = "ctyri"
+                    0 -> reloadData("praha,cz")
+                    1 -> reloadData("brno,cz")
+                    2 -> reloadData("ostrava,cz")
+                    3 -> reloadData("olomouc,cz")
+                    4 -> reloadData("opava,cz")
+                    5 -> reloadData("frenštát pod radhoštěm,cz")
                 }
             }
 
@@ -77,7 +74,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    inner class weatherTask() : AsyncTask<String, Void, String>() {
+    fun reloadData(test:String){
+        weatherTask(test).execute()
+    }
+
+    inner class weatherTask(val cities: String) : AsyncTask<String, Void, String>() {
+
+
+        fun reloadData(){
+
+
+        }
+
+
+
+
         override fun onPreExecute() {
             super.onPreExecute()
             /* Showing the ProgressBar, Making the main design GONE */
@@ -94,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
 
             try{
-                response = (URL("https://api.openweathermap.org/data/2.5/weather?q=$CITY&units=metric&appid=$API").readText(Charsets.UTF_8)).dropLast(1)+ "," +responseCrypto
+                response = (URL("https://api.openweathermap.org/data/2.5/weather?q=$cities&units=metric&appid=$API").readText(Charsets.UTF_8)).dropLast(1)+ "," +responseCrypto
 
             }catch (e: Exception){
                 response = null
@@ -178,5 +189,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
     }
 }
