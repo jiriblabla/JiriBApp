@@ -27,13 +27,6 @@ import android.icu.util.Calendar
 import android.widget.TextView
 
 
-
-
-
-
-
-
-
 class SecondActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,9 +53,6 @@ class SecondActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
-
-
 
     inner class CoinTask() : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
@@ -134,7 +124,6 @@ class SecondActivity : AppCompatActivity() {
                     val tv = findViewById(poleCZ.get(i)) as TextView
                     tv.setText(CZ.get(i+1))
                 }
-
 
                 //US
                 val US = mutableListOf(" ")

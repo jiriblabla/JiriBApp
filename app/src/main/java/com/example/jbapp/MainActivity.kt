@@ -25,10 +25,6 @@ import java.time.LocalTime
 import android.icu.util.Calendar
 
 
-
-
-
-
 class MainActivity : AppCompatActivity() {
 
     val CITY: String = "frenštát pod radhoštěm,cz"
@@ -50,6 +46,28 @@ class MainActivity : AppCompatActivity() {
 
         weatherTask().execute()
 
+        spinner.onItemSelectedListener = object:AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                when(position){
+                    0 -> findViewById<TextView>(R.id.svatek).text = "nula"
+                    1 -> findViewById<TextView>(R.id.svatek).text = "jedna"
+                    2 -> findViewById<TextView>(R.id.svatek).text = "dva"
+                    3 -> findViewById<TextView>(R.id.svatek).text = "tri"
+                    3 -> findViewById<TextView>(R.id.svatek).text = "ctyri"
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
+
 
         val showMore: Button = findViewById (R.id.showMore)
 
@@ -57,14 +75,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SecondActivity::class.java)
             startActivity(intent)
         }
-
-
-
-
     }
-
-
-
 
     inner class weatherTask() : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
@@ -103,13 +114,10 @@ class MainActivity : AppCompatActivity() {
                 else -> "Dobrý den, $NAME"
             }
         }
-        private fun getSvatek():String{
+        //private fun getSvatek():String{
             //var svatekData:String = URL("https://svatky.adresa.info/json").readText(Charsets.UTF_8)
-            return "svatekData"
-        }
-
-
-
+          //  return "svatekData"
+        //}
 
         @RequiresApi(Build.VERSION_CODES.N)
         override fun onPostExecute(result: String) {
@@ -120,16 +128,9 @@ class MainActivity : AppCompatActivity() {
                 val main = jsonObj.getJSONObject("main")
                 val sys = jsonObj.getJSONObject("sys")
                 val wind = jsonObj.getJSONObject("wind")
-                val weather = jsonObj.getJSONArray("weather").getJSONObject(0)
-
-
-
-
                 val updatedAt:Long = jsonObj.getLong("dt")
                 val updatedAtText = SimpleDateFormat("dd. MM. yyyy").format(Date(updatedAt*1000))
 
-
-                val temp = (main.getString("temp"))+"°C"
                 val tempStr = (main.getString("temp"))
                 val tempDble = ((tempStr.toDouble()).toBigDecimal().setScale(0, RoundingMode.HALF_UP)).toPlainString()+" °C"
                 val tempM = (((main.getString("temp_min")).toDouble()).toBigDecimal().setScale(0, RoundingMode.HALF_UP)).toPlainString()
@@ -141,8 +142,6 @@ class MainActivity : AppCompatActivity() {
                 val sunset:Long = sys.getLong("sunset")
                 val windSpeed = wind.getString("speed") + " km/h"
 
-
-
                 val priceBTCcz = jsonObj.getJSONObject("bitcoin").getString("czk")+" Kč"
                 val priceBTCus = jsonObj.getJSONObject("bitcoin").getString("usd")+" $"
                 val priceETHcz = jsonObj.getJSONObject("ethereum").getString("czk")+" Kč"
@@ -153,7 +152,7 @@ class MainActivity : AppCompatActivity() {
 
                 findViewById<TextView>(R.id.address).text = getGreetingMessage()
                 findViewById<TextView>(R.id.updated_at).text =  updatedAtText
-                findViewById<TextView>(R.id.svatek).text = "ahoj"
+                //findViewById<TextView>(R.id.svatek).text = "ahoj"
 
                 findViewById<TextView>(R.id.tempRight).text = tempDble
                 findViewById<TextView>(R.id.priceBTCcz).text = priceBTCcz
@@ -164,17 +163,12 @@ class MainActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.priceADAus).text = priceADAus
 
 
-                findViewById<TextView>(R.id.testCisla).text = result
-
                 findViewById<TextView>(R.id.temp_min).text = tempMin
                 findViewById<TextView>(R.id.temp_max).text = tempMax
                 findViewById<TextView>(R.id.sunrise).text = SimpleDateFormat("HH:mm").format(Date(sunrise*1000))
                 findViewById<TextView>(R.id.sunset).text = SimpleDateFormat("HH:mm").format(Date(sunset*1000))
                 findViewById<TextView>(R.id.wind).text = windSpeed
-                //findViewById<TextView>(R.id.pressure).text = pressure
-                //findViewById<TextView>(R.id.humidity).text = humidity
 
-                /* Views populated, Hiding the loader, Showing the main design */
                 findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
                 findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.VISIBLE
 
