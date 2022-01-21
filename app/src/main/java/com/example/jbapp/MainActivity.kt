@@ -29,15 +29,6 @@ import android.widget.Toast
 import android.widget.TextView
 
 
-
-
-
-
-
-
-
-
-
 class MainActivity : AppCompatActivity() {
     val API: String = "06c921750b9a82d8f5d1294e1586276f" // Use API key
     val NAME: String = "Jiří"
