@@ -28,7 +28,6 @@ import android.widget.TextView
 
 
 class SecondActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
@@ -45,7 +44,6 @@ class SecondActivity : AppCompatActivity() {
         rButton.setOnClickListener(){
             refresh()
         }
-
     }
 
     private fun refresh() {
@@ -61,8 +59,6 @@ class SecondActivity : AppCompatActivity() {
             findViewById<ProgressBar>(R.id.loader).visibility = View.VISIBLE
             findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.GONE
             findViewById<TextView>(R.id.errorText).visibility = View.GONE
-
-
         }
 
         override fun doInBackground(vararg params: String?): String? {
@@ -84,26 +80,7 @@ class SecondActivity : AppCompatActivity() {
                 val jsonObj = JSONObject(result)
                 val poleNazev = intArrayOf(R.id.coinName1, R.id.coinName2, R.id.coinName3, R.id.coinName4, R.id.coinName5, R.id.coinName6, R.id.coinName7, R.id.coinName8, R.id.coinName9, R.id.coinName10, R.id.coinName11, R.id.coinName12, R.id.coinName13, R.id.coinName14, R.id.coinName15, R.id.coinName16, R.id.coinName17, R.id.coinName18, R.id.coinName19)
                 val poleCZ = intArrayOf(R.id.czPrice1, R.id.czPrice2, R.id.czPrice3, R.id.czPrice4, R.id.czPrice5, R.id.czPrice6, R.id.czPrice7, R.id.czPrice8, R.id.czPrice9, R.id.czPrice10, R.id.czPrice11, R.id.czPrice12, R.id.czPrice13, R.id.czPrice14, R.id.czPrice15, R.id.czPrice16, R.id.czPrice17, R.id.czPrice18, R.id.czPrice19)
-                val poleUS = intArrayOf(
-                    R.id.usPrice1,
-                    R.id.usPrice2,
-                    R.id.usPrice3,
-                    R.id.usPrice4,
-                    R.id.usPrice5,
-                    R.id.usPrice6,
-                    R.id.usPrice7,
-                    R.id.usPrice8,
-                    R.id.usPrice9,
-                    R.id.usPrice10,
-                    R.id.usPrice11,
-                    R.id.usPrice12,
-                    R.id.usPrice13,
-                    R.id.usPrice14,
-                    R.id.usPrice15,
-                    R.id.usPrice16,
-                    R.id.usPrice17,
-                    R.id.usPrice18,
-                    R.id.usPrice19
+                val poleUS = intArrayOf(R.id.usPrice1, R.id.usPrice2, R.id.usPrice3, R.id.usPrice4, R.id.usPrice5, R.id.usPrice6, R.id.usPrice7, R.id.usPrice8, R.id.usPrice9, R.id.usPrice10, R.id.usPrice11, R.id.usPrice12, R.id.usPrice13, R.id.usPrice14, R.id.usPrice15, R.id.usPrice16, R.id.usPrice17, R.id.usPrice18, R.id.usPrice19
                 )
                 val coiny = arrayOf("bitcoin","ethereum","cardano","helium","chainlink","tron","monero","cosmos","stellar","aave","harmony","solana","uniswap","nexo","tether","litecoin","polkadot","kusama","zcash")
 

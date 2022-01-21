@@ -2,6 +2,7 @@ package com.example.jbapp
 
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import java.util.Locale
@@ -23,6 +24,18 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.time.LocalTime
 import android.icu.util.Calendar
+import android.widget.EditText
+import android.widget.Toast
+import android.widget.TextView
+
+
+
+
+
+
+
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,16 +43,50 @@ class MainActivity : AppCompatActivity() {
     val NAME: String = "Jiří"
     lateinit var spinner:Spinner
     lateinit var adapter: ArrayAdapter<String>
+    val SHARED_PREFS = "sharedPrefs"
+    val TEXT = "text"
+
+    private lateinit var text: String
+    private lateinit var textView: TextView
+    private lateinit var editText: EditText
+    private lateinit var saveButton: Button
+    private lateinit var deleteButton: Button
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         var data = arrayListOf<String>("Praha","Brno","Ostrava","Olomouc","Opava","Frenštát p.R.")
+        val showMore: Button = findViewById (R.id.showMore)
+
         adapter = ArrayAdapter(applicationContext,android.R.layout.simple_spinner_dropdown_item,data)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
         spinner = findViewById(R.id.spinner) as Spinner
         spinner.adapter=adapter
+
+        editText = findViewById<EditText>(R.id.noteContent)
+        textView = findViewById<TextView>(R.id.testView)
+        saveButton = findViewById<Button>(R.id.save)
+        deleteButton = findViewById<Button>(R.id.delete)
+
+        saveButton.setOnClickListener() {
+            saveData()
+            textView.setText(editText.getText().toString())
+
+        }
+        deleteButton.setOnClickListener() {
+            clearData()
+            saveData()
+
+        }
+        showMore.setOnClickListener(){
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivity(intent)
+        }
+
+        loadData()
+        updateViews()
 
 
         spinner.onItemSelectedListener = object:AdapterView.OnItemSelectedListener {
@@ -64,14 +111,28 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    fun saveData() {
+        val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(TEXT, textView.getText().toString())
+        editor.apply()
+        Toast.makeText(this, "Uloženo", Toast.LENGTH_SHORT).show()
+    }
 
 
-        val showMore: Button = findViewById (R.id.showMore)
+    fun loadData() {
+        val sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
+        text = sharedPreferences.getString(TEXT, "")!!
+    }
 
-        showMore.setOnClickListener(){
-            val intent = Intent(this, SecondActivity::class.java)
-            startActivity(intent)
-        }
+    fun updateViews() {
+        textView.text = text
+    }
+
+    fun clearData(){
+        textView.text = ""
     }
 
     fun reloadData(test:String){
@@ -80,29 +141,17 @@ class MainActivity : AppCompatActivity() {
 
     inner class weatherTask(val cities: String) : AsyncTask<String, Void, String>() {
 
-
-        fun reloadData(){
-
-
-        }
-
-
-
-
         override fun onPreExecute() {
             super.onPreExecute()
             /* Showing the ProgressBar, Making the main design GONE */
             findViewById<ProgressBar>(R.id.loader).visibility = View.VISIBLE
             findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.GONE
             findViewById<TextView>(R.id.errorText).visibility = View.GONE
-
-
         }
 
         override fun doInBackground(vararg params: String?): String? {
             var response:String?
             var responseCrypto:String = (URL("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,solana,tether,xrp,terra,polkadot,dodgecoin&vs_currencies=czk,usd").readText(Charsets.UTF_8)).drop(1)
-
 
             try{
                 response = (URL("https://api.openweathermap.org/data/2.5/weather?q=$cities&units=metric&appid=$API").readText(Charsets.UTF_8)).dropLast(1)+ "," +responseCrypto
@@ -125,10 +174,6 @@ class MainActivity : AppCompatActivity() {
                 else -> "Dobrý den, $NAME"
             }
         }
-        //private fun getSvatek():String{
-            //var svatekData:String = URL("https://svatky.adresa.info/json").readText(Charsets.UTF_8)
-          //  return "svatekData"
-        //}
 
         @RequiresApi(Build.VERSION_CODES.N)
         override fun onPostExecute(result: String) {
@@ -163,8 +208,6 @@ class MainActivity : AppCompatActivity() {
 
                 findViewById<TextView>(R.id.address).text = getGreetingMessage()
                 findViewById<TextView>(R.id.updated_at).text =  updatedAtText
-                //findViewById<TextView>(R.id.svatek).text = "ahoj"
-
                 findViewById<TextView>(R.id.tempRight).text = tempDble
                 findViewById<TextView>(R.id.priceBTCcz).text = priceBTCcz
                 findViewById<TextView>(R.id.priceBTCus).text = priceBTCus
@@ -172,8 +215,6 @@ class MainActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.priceETHus).text = priceETHus
                 findViewById<TextView>(R.id.priceADAcz).text = priceADAcz
                 findViewById<TextView>(R.id.priceADAus).text = priceADAus
-
-
                 findViewById<TextView>(R.id.temp_min).text = tempMin
                 findViewById<TextView>(R.id.temp_max).text = tempMax
                 findViewById<TextView>(R.id.sunrise).text = SimpleDateFormat("HH:mm").format(Date(sunrise*1000))
